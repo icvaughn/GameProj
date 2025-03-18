@@ -19,7 +19,7 @@ public class Room
             
             Name = name;
             Connections = new List<Room>();
-            prefab = Resources.Load("Prefabs/Room") as GameObject;
+            prefab = Resources.Load("GameProj/Prefabs/Room") as GameObject;
             //X,Y coordinates of the room in the array of the dungeon
             X = x;
             Y = y;
@@ -63,7 +63,7 @@ protected void ChangeChildMaterial(string childName, string materialPath)
     {
         public TreasureRoom(string name) : base(name, 0, 0)
         {
-            prefab = Resources.Load("Prefabs/TreasureRoom") as GameObject; 
+            prefab = Resources.Load("GameProj/Prefabs/TreasureRoom") as GameObject; 
             
            // ChangeChildMaterial(prefab,  "Texture/Floor1");
         //ChangeChildMaterial(prefab, "Texture/DefaultWallTexture");
@@ -81,7 +81,7 @@ protected void ChangeChildMaterial(string childName, string materialPath)
     {
         public MonsterRoom(string name) : base(name, 0, 0)
         {
-            prefab = Resources.Load("Prefabs/MonsterRoom") as GameObject;
+            prefab = Resources.Load("GameProj/Prefabs/MonsterRoom") as GameObject;
 
     	//ChangeChildMaterial(prefab, "Texture/Floor1");
         //ChangeChildMaterial(prefab,  "Texture/DefaultWallTexture");
@@ -98,7 +98,7 @@ protected void ChangeChildMaterial(string childName, string materialPath)
     {
         public TrapRoom(string name) : base(name, 0, 0)
         {
-            prefab = Resources.Load("Prefabs/TrapRoom") as GameObject;
+            prefab = Resources.Load("GameProj/Prefabs/TrapRoom") as GameObject;
 
      	//ChangeChildMaterial(prefab,  "Texture/Floor1");
         //ChangeChildMaterial(prefab,  "Texture/DefaultWallTexture");
@@ -111,5 +111,24 @@ protected void ChangeChildMaterial(string childName, string materialPath)
         }
 
 	
+    }
+
+
+    public class StartRoom : Room
+    {
+        public StartRoom(string name) : base(name, 0, 0)
+        {
+            prefab = Resources.Load("GameProj/Prefabs/TreasureRoom") as GameObject; 
+            
+            // ChangeChildMaterial(prefab,  "Texture/Floor1");
+            //ChangeChildMaterial(prefab, "Texture/DefaultWallTexture");
+            //ChangeChildMaterial(prefab, "Texture/DefaultWallTexture");
+            
+        }
+
+        public override string Description()
+        {
+            return $"{Name}: A room you start in!";
+        }
     }
     

@@ -11,12 +11,13 @@ public class DungeonScript : MonoBehaviour
     void Start()
     {
 		player = FindObjectOfType<BasicPlayerController>().gameObject;
+		dungeon = new Dungeon();
     }
 
 	public void generateDungeonInintial(){
 				//create a player object and a dungeon object
 	    //player = Instantiate(Resources.Load("Prefabs/Player") as GameObject);
-        dungeon = new Dungeon();
+        dungeon = new Dungeon(5);
 		//generate a dungeon with x number of rooms
         dungeon.GenerateDungeon(5);
 		instance = Instantiate(dungeon.activeRoom.prefab);
