@@ -24,7 +24,7 @@ public class DoorTrigger : MonoBehaviour
             Debug.Log("Player collided with door trigger!");
             // Call the MoveToRoom method
             dungeonScript.moveroom(XValue,YValue);
-            dungeonScript.MovePlayerToRoomOrigin();
+            //dungeonScript.MovePlayerToRoomOrigin();
         }
     }
 }
