@@ -13,24 +13,26 @@ public class Dungeon
     bool startRoom = true;
     private bool BossRoom = true;
     
+    public int rank = 0;
+    
     Random random = new Random();
 
     private static readonly List<int[,]> StaticEntryLayouts = new List<int[,]>
     {
-        new int[,] { { 0, 0, 2, 0, 0 }, { 0, 1, 1, 1, 2, 0 }, { 0, 1, 0, 0, 5 } },
-        new int[,] { { 1, 0, 0, 3 }, { 1, 2, 0, 1 }, { 0, 4, 1, 1 } }
+        new int[,] { { 0, 0, 2, 0, 0 }, { 0, 1, 5, 1, 2, 0 }, { 0, 1, 0, 0, 5 } },
+        new int[,] { { 5, 0, 0, 3 }, { 1, 2, 0, 1 }, { 0, 4, 1, 5 } }
     };
     
     private static readonly List<int[,]> StaticIntermediateLayouts = new List<int[,]>
     {
-        new int[,] { { 0, 0, 2, 0,2,3,1,2,1, 0 }, { 0, 1, 1, 1, 2, 0,0,0,1,2,1 }, { 0, 1, 0, 0, 5,0,0,1,4,2 } },
-        new int[,] { { 1, 0, 0, 3,1,1,1 }, { 1, 2, 0, 1,1,1,1 }, { 0, 4, 1, 1,1,1,1 } }
+        new int[,] { { 0, 0, 2, 0,2,3,5,2,1, 0 }, { 0, 1, 1, 1, 2, 0,0,0,1,2,1 }, { 0, 1, 0, 0, 5,0,0,1,4,2 } },
+        new int[,] { { 1, 0, 0, 3,1,1,5 }, { 1, 2, 0, 1,5,1,1 }, { 0, 4, 1, 1,1,1,1 } }
     };
     
     private static readonly List<int[,]> StaticAdvanceLayouts = new List<int[,]>
     {
         new int[,] { { 0, 0, 2, 0,2,3,1 }, { 0, 1, 1, 1, 2, 0,0 }, { 0, 1, 0, 0, 5,1,0 } },
-        new int[,] { { 1, 0, 0, 3,1,1 }, { 1, 2, 0, 1,1,1 }, { 0, 4, 1, 1,1,1 } }
+        new int[,] { { 5, 0, 0, 3,1,1 }, { 1, 2, 0, 1,1,1 }, { 0, 4, 1, 1,1,5 } }
     };
 
 
@@ -84,7 +86,7 @@ public class Dungeon
             { 2, new List<Type> { typeof(MonsterRoom), typeof(Room) } },
             { 3, new List<Type> { typeof(TrapRoom), typeof(TrapRoom) } },
             { 4, new List<Type> { typeof(TrapRoom), typeof(TreasureRoom) } },
-            { 5, new List<Type> {/* typeof(BossRoom),*/ typeof(StartRoom) } }
+            { 5, new List<Type> {typeof(BossRoom), typeof(StartRoom) } }
         };
 
         // Check if the type exists in the dictionary
@@ -92,20 +94,26 @@ public class Dungeon
     {
         var possibleRooms = roomOptions[type];
         Type selectedRoomType = possibleRooms[random.Next(possibleRooms.Count)];
-        if (type == 5 && selectedRoomType == typeof(StartRoom) && startRoom)
+        if (type == 5)
         {
-            startRoom = false;
-            selectedRoomType = typeof(StartRoom);
+            if (selectedRoomType == typeof(StartRoom) && startRoom)
+            {
+                startRoom = false;
+                selectedRoomType = typeof(StartRoom);
+                //sets the active room to the start room during initilization of the new dungeon
+                activeRoom = (Room)Activator.CreateInstance(selectedRoomType, name);
+            }
+            else if ( selectedRoomType == typeof(BossRoom) && BossRoom)
+            {
+                BossRoom = false;
+                selectedRoomType = typeof(BossRoom);
+            }
+            else
+            {
+                selectedRoomType = typeof(Room);
+            }
         }
-        else if (type == 5 && selectedRoomType == typeof(BossRoom) && BossRoom)
-        {
-            BossRoom = false;
-            selectedRoomType = typeof(BossRoom);
-        }
-        else if (type ==5)
-        {
-            selectedRoomType = typeof(Room);
-        }
+
         return (Room)Activator.CreateInstance(selectedRoomType, name);
     }
 

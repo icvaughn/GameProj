@@ -131,4 +131,22 @@ protected void ChangeChildMaterial(string childName, string materialPath)
             return $"{Name}: A room you start in!";
         }
     }
+
+    public class BossRoom : Room
+    {
+        public StartRoom(string name) : base(name, 0, 0)
+        {
+            prefab = Resources.Load("GameProj/Prefabs/BossRoom") as GameObject; 
+            
+            // ChangeChildMaterial(prefab,  "Texture/Floor1");
+            //ChangeChildMaterial(prefab, "Texture/DefaultWallTexture");
+            //ChangeChildMaterial(prefab, "Texture/DefaultWallTexture");
+            
+        }
+
+        public override string Description()
+        {
+            return $"{Name}: The Boss Room!";
+        }
+    }
     
