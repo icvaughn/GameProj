@@ -19,13 +19,13 @@ public class Dungeon
 
     private static readonly List<int[,]> StaticEntryLayouts = new List<int[,]>
     {
-        new int[,] { { 0, 0, 2, 0, 0 }, { 0, 1, 5, 1, 2, 0 }, { 0, 1, 0, 0, 5 } },
+        new int[,] { { 0, 0, 2, 0, 0 }, { 0, 1, 5, 1, 2 }, { 0, 1, 0, 0, 5 } },
         new int[,] { { 5, 0, 0, 3 }, { 1, 2, 0, 1 }, { 0, 4, 1, 5 } }
     };
     
     private static readonly List<int[,]> StaticIntermediateLayouts = new List<int[,]>
     {
-        new int[,] { { 0, 0, 2, 0,2,3,5,2,1, 0 }, { 0, 1, 1, 1, 2, 0,0,0,1,2,1 }, { 0, 1, 0, 0, 5,0,0,1,4,2 } },
+        new int[,] { { 0, 0, 2, 0,2,3,5,2,1, 0 }, { 0, 1, 1, 1, 2, 0,0,0,1,2}, { 0, 1, 0, 0, 5,0,0,1,4,2 } },
         new int[,] { { 1, 0, 0, 3,1,1,5 }, { 1, 2, 0, 1,5,1,1 }, { 0, 4, 1, 1,1,1,1 } }
     };
     
@@ -35,11 +35,23 @@ public class Dungeon
         new int[,] { { 5, 0, 0, 3,1,1 }, { 1, 2, 0, 1,1,1 }, { 0, 4, 1, 1,1,5 } }
     };
 
+       public Dungeon()
+        {
+            //rooms = new room of start room type
+            
+            rooms = new Room[1, 1];
+            rooms[0, 0] = new StartRoom("Room_0_0");
+            activeRoom = rooms[0, 0];
+        }
+        public Dungeon(int size)
+        {
+    		 GenerateDungeon(size);
+        }
 
-    public GenerateDungeon(int level)
+    public void GenerateDungeon(int level)
     {
         // Select a random layout
-        int[,] selectedLayout = StaticLayouts[random.Next(StaticLayouts.Count)];
+        int[,]  selectedLayout = StaticEntryLayouts[random.Next(StaticEntryLayouts.Count)];
         //a case where it gets a layout based off of the value of level
         if (level == 1)
         {
@@ -56,7 +68,7 @@ public class Dungeon
         
 
         size = selectedLayout.GetLength(0);
-        rooms = new Room[size, selectedLayout.GetLength(1)];
+        rooms = new Room[selectedLayout.GetLength(0), selectedLayout.GetLength(1)];
 
         // Populate rooms based on the layout
         for (int i = 0; i < size; i++)
@@ -120,33 +132,6 @@ public class Dungeon
         // Default to null if the type is not in the dictionary
         return null;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    public Dungeon()
-    {
-        //rooms = new room of start room type
-        
-        rooms = new Room[1, 1];
-        rooms[0, 0] = new StartRoom("Room_0_0");
-        activeRoom = rooms[0, 0];
-    }
-    public Dungeon(int size)
-    {
-		//initialize the size of the dungeon and create a 2D array of rooms
-        this.size = size;
-        rooms = new Room[size, size];
-    }
 
     /*
     public void GenerateDungeon(int numRooms)
@@ -188,8 +173,10 @@ public class Dungeon
             for (int j = 0; j < size; j++)
             {
                 Room room = rooms[i, j];
+             
                 if (room == null) continue;
-
+  				room.X = i;
+                room.Y = j;
                 List<Room> neighbors = new List<Room>();
 
                 if (i > 0 && rooms[i - 1, j] != null)

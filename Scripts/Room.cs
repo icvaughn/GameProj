@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+	using System.Collections.Generic;
 using UnityEngine;
 
 public class Room
@@ -13,6 +13,15 @@ public class Room
 
         public List<Room> Connections { get; set; }
 
+    public Room(string name)
+    {
+        //initialize the room
+        Name = name;
+        Connections = new List<Room>();
+        prefab = Resources.Load("GameProj/Prefabs/Room") as GameObject;
+        activeDoors = new List<string>();
+    }
+	
         public Room(string name , int x, int y)
         {
             //initialize the room
@@ -134,7 +143,7 @@ protected void ChangeChildMaterial(string childName, string materialPath)
 
     public class BossRoom : Room
     {
-        public StartRoom(string name) : base(name, 0, 0)
+        public BossRoom(string name) : base(name, 0, 0)
         {
             prefab = Resources.Load("GameProj/Prefabs/BossRoom") as GameObject; 
             
