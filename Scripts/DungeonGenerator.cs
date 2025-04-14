@@ -10,7 +10,121 @@ public class Dungeon
     private Room[,] rooms;
     public Room activeRoom = new Room("Room_0_0",0,0);
     private int size;
+    bool startRoom = true;
+    private bool BossRoom = true;
+    
+    Random random = new Random();
 
+    private static readonly List<int[,]> StaticEntryLayouts = new List<int[,]>
+    {
+        new int[,] { { 0, 0, 2, 0, 0 }, { 0, 1, 1, 1, 2, 0 }, { 0, 1, 0, 0, 5 } },
+        new int[,] { { 1, 0, 0, 3 }, { 1, 2, 0, 1 }, { 0, 4, 1, 1 } }
+    };
+    
+    private static readonly List<int[,]> StaticIntermediateLayouts = new List<int[,]>
+    {
+        new int[,] { { 0, 0, 2, 0,2,3,1,2,1, 0 }, { 0, 1, 1, 1, 2, 0,0,0,1,2,1 }, { 0, 1, 0, 0, 5,0,0,1,4,2 } },
+        new int[,] { { 1, 0, 0, 3,1,1,1 }, { 1, 2, 0, 1,1,1,1 }, { 0, 4, 1, 1,1,1,1 } }
+    };
+    
+    private static readonly List<int[,]> StaticAdvanceLayouts = new List<int[,]>
+    {
+        new int[,] { { 0, 0, 2, 0,2,3,1 }, { 0, 1, 1, 1, 2, 0,0 }, { 0, 1, 0, 0, 5,1,0 } },
+        new int[,] { { 1, 0, 0, 3,1,1 }, { 1, 2, 0, 1,1,1 }, { 0, 4, 1, 1,1,1 } }
+    };
+
+
+    public GenerateDungeon(int level)
+    {
+        // Select a random layout
+        int[,] selectedLayout = StaticLayouts[random.Next(StaticLayouts.Count)];
+        //a case where it gets a layout based off of the value of level
+        if (level == 1)
+        {
+            selectedLayout = StaticEntryLayouts[random.Next(StaticEntryLayouts.Count)];
+        }
+        else if (level == 2)
+        {
+            selectedLayout = StaticIntermediateLayouts[random.Next(StaticIntermediateLayouts.Count)];
+        }
+        else if (level == 3)
+        {
+            selectedLayout = StaticAdvanceLayouts[random.Next(StaticAdvanceLayouts.Count)];
+        }
+        
+
+        size = selectedLayout.GetLength(0);
+        rooms = new Room[size, selectedLayout.GetLength(1)];
+
+        // Populate rooms based on the layout
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < selectedLayout.GetLength(1); j++)
+            {
+                int roomType = selectedLayout[i, j];
+                if (roomType != 0) // 0 represents an empty space
+                {
+                    string roomName = $"Room_{i}_{j}";
+                    rooms[i, j] = CreateRoomByType(roomType, roomName);
+                }
+            }
+        }
+
+        ConnectRooms();
+    } 
+    private Room CreateRoomByType(int type, string name)
+    {
+
+
+        // Define possible room types for each layout value
+   
+        var roomOptions = new Dictionary<int, List<Type>>
+        {
+            { 1, new List<Type> { typeof(TreasureRoom), typeof(Room) } },
+            { 2, new List<Type> { typeof(MonsterRoom), typeof(Room) } },
+            { 3, new List<Type> { typeof(TrapRoom), typeof(TrapRoom) } },
+            { 4, new List<Type> { typeof(TrapRoom), typeof(TreasureRoom) } },
+            { 5, new List<Type> {/* typeof(BossRoom),*/ typeof(StartRoom) } }
+        };
+
+        // Check if the type exists in the dictionary
+        if (roomOptions.ContainsKey(type))
+    {
+        var possibleRooms = roomOptions[type];
+        Type selectedRoomType = possibleRooms[random.Next(possibleRooms.Count)];
+        if (type == 5 && selectedRoomType == typeof(StartRoom) && startRoom)
+        {
+            startRoom = false;
+            selectedRoomType = typeof(StartRoom);
+        }
+        else if (type == 5 && selectedRoomType == typeof(BossRoom) && BossRoom)
+        {
+            BossRoom = false;
+            selectedRoomType = typeof(BossRoom);
+        }
+        else if (type ==5)
+        {
+            selectedRoomType = typeof(Room);
+        }
+        return (Room)Activator.CreateInstance(selectedRoomType, name);
+    }
+
+        // Default to null if the type is not in the dictionary
+        return null;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public Dungeon()
     {
         //rooms = new room of start room type
@@ -26,11 +140,19 @@ public class Dungeon
         rooms = new Room[size, size];
     }
 
+    /*
     public void GenerateDungeon(int numRooms)
     {
         rooms = new Room[numRooms, numRooms];
 		//generate rooms with random types
         Random random = new Random();
+        
+        
+        
+        
+        
+        
+        
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)	
@@ -48,7 +170,7 @@ public class Dungeon
         Debug.LogError("Active room Assigned: " + activeRoom.Name);
         PrintRoomLayout();
     }
-
+*/
     private void ConnectRooms()
     {
         Random random = new Random();
