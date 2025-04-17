@@ -17,10 +17,7 @@ public class DungeonScript : MonoBehaviour
 	public void generateDungeonInintial(){
 				//create a player object and a dungeon object
 	    //player = Instantiate(Resources.Load("Prefabs/Player") as GameObject);
-        dungeon = new Dungeon(1);
-        Debug.Log(" new Dungeon(1) ran");
-		//generate a dungeon with x number of rooms
-        dungeon.GenerateDungeon(1);
+        dungeon.GenerateDungeon(dungeon.level);
 		instance = Instantiate(dungeon.activeRoom.prefab);
 		MovePlayerToRoomOrigin();
 }

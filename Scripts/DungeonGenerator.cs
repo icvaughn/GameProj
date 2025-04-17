@@ -43,11 +43,6 @@ public class Dungeon
             rooms[0, 0] = new StartRoom("Room_0_0");
             activeRoom = rooms[0, 0];
         }
-        public Dungeon(int size)
-        {
-    		 GenerateDungeon(size);
-        }
-
     public void GenerateDungeon(int level)
     {
         // Select a random layout
@@ -58,7 +53,7 @@ public class Dungeon
             selectedLayout = StaticEntryLayouts[random.Next(StaticEntryLayouts.Count)];
         }
         else if (level == 2)
-        {
+        {.
             selectedLayout = StaticIntermediateLayouts[random.Next(StaticIntermediateLayouts.Count)];
         }
         else if (level == 3)
@@ -132,38 +127,8 @@ public class Dungeon
         // Default to null if the type is not in the dictionary
         return null;
     }
-
-    /*
-    public void GenerateDungeon(int numRooms)
-    {
-        rooms = new Room[numRooms, numRooms];
-		//generate rooms with random types
-        Random random = new Random();
-        
-        
-        
-        
-        
-        
-        
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)	
-            {
-                string roomName = $"Room_{i}_{j}";
-                Type roomType =
-                    new List<Type> { typeof(TreasureRoom), typeof(MonsterRoom), typeof(TrapRoom) }[random.Next(3)];
-                Room room = (Room)Activator.CreateInstance(roomType, roomName);
-                rooms[i, j] = room;
-            }
-        }
-
-        ConnectRooms();
-        activeRoom = rooms[0, 0];
-        Debug.LogError("Active room Assigned: " + activeRoom.Name);
-        PrintRoomLayout();
-    }
-*/
+    
+    // Connects the rooms together by checking if they are adjacent to each other
     private void ConnectRooms()
     {
         Random random = new Random();
